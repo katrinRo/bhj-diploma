@@ -32,19 +32,19 @@ class TransactionsPage {
    * TransactionsPage.removeAccount соответственно
    * */
   registerEvents() {
-    const removeAccBtn = this.element.querySelector('.remove-account');
-    const removeTransactionBtn = document.querySelectorAll('.transaction__remove');
-    console.log(removeTransactionBtn)
-    removeAccBtn.addEventListener('click', (e) => {
+    this.element.addEventListener('click', (e) => {
       e.preventDefault();
-      this.removeAccount();
-    });
-      for (let el of removeTransactionBtn){
-        el.addEventListener('click', (e) => {
-          e.preventDefault();
-          this.removeTransaction();
-        })
+      const removeAccBtn = e.target.closest('.remove-account');
+      const removeTransactionBtn = e.target.closest('.transaction__remove');
+     if (removeAccBtn){
+        this.removeAccount();
       }
+      if (removeTransactionBtn){
+        this.removeTransaction(removeTransactionBtn.dataset.id);
+      }
+
+    });
+
 
   }
 
@@ -79,7 +79,7 @@ class TransactionsPage {
    * */
   removeTransaction( id ) {
     if (confirm("Вы действительно хотите удалить эту транзакцию?")) {
-      Transaction.remove(id, (err, res) => {
+      Transaction.remove({id}, (err, res) => {
         if (res.success){
           App.update();
         }
